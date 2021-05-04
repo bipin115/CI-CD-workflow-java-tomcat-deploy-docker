@@ -1,6 +1,15 @@
 pipeline {
     agent any
     stages {
+        stage('Initialize') {
+            steps {
+                //enable remote triggers
+                script {
+                    properties([[$class: 'GithubProjectProperty', displayName: '', projectUrlStr: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git/'], pipelineTriggers([pollSCM('* * * * *')])])
+                }
+                
+            }
+        }
         stage('Build Application') {
             steps {
                 sh 'mvn -f java-tomcat-sample-docker/pom.xml clean package'

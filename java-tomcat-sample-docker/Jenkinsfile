@@ -1,9 +1,22 @@
 pipeline {
     agent any
     stages {
+        stage('Initialize Git POLL SCM Feature') {
+            steps {
+                //enable remote triggers
+                script {
+                    properties([[$class: 'GithubProjectProperty', displayName: '', projectUrlStr: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git/'], pipelineTriggers([pollSCM('* * * * *')])])
+                }  
+            }
+        }
+	stage('Git project checkout') {
+           steps {
+                git branch: 'main', url: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git'  
+          }
+        }
         stage('Build Application') {
             steps {
-                sh 'mvn -f pom.xml clean package'
+                sh 'mvn -f java-tomcat-sample-docker/pom.xml clean package'
             }
             post {
                 success {
@@ -13,13 +26,35 @@ pipeline {
             }
         }
 
-        stage('Create Tomcat Docker Image'){
+        stage('Docker Build and Tag') {
+           steps {
+              
+                sh 'docker build -t samplewebapp:latest .'  
+                sh 'docker tag samplewebapp bipin115/samplewebapp:latest'       
+          }
+        }
+        
+        stage('Publish image to Docker Hub') {
+            
             steps {
-                sh "pwd"
-                sh "ls -a"
-                sh "docker build -t tomcatsamplewebapp:${env.BUILD_ID} ."
+                    withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+                    sh  'docker push bipin115/samplewebapp:lates'
+                    } 
             }
         }
-
+     
+      stage('Run Docker container on Jenkins Agent') {
+             
+            steps {
+                sh "docker run -d -p 9090:8080 bipin115/samplewebapp"
+            }
+        }
+        
+       stage('Run Docker container on remote hosts') {
+             
+            steps {
+                sh "docker -H ssh://jenkins@localhost run -d -p 8003:8080 bipin115/samplewebapp"
+            }
+        }
     }
 }

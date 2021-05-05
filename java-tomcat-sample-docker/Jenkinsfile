@@ -38,7 +38,7 @@ pipeline {
             
             steps {
                     withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
-                    sh  'docker push bipin115/samplewebapp:lates'
+                    sh  'docker push bipin115/samplewebapp:latest'
                     } 
             }
         }
@@ -53,7 +53,7 @@ pipeline {
        stage('Run Docker container on remote hosts') {
              
             steps {
-                sh "docker -H ssh://jenkins@localhost run -d -p 8003:8080 bipin115/samplewebapp"
+                sh "docker -H ssh://jenkins@3.6.37.189 run -d -p 9090:8080 bipin115/samplewebapp"
             }
         }
     }

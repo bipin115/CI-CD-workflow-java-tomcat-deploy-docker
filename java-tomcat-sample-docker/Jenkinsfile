@@ -6,9 +6,13 @@ pipeline {
                 //enable remote triggers
                 script {
                     properties([[$class: 'GithubProjectProperty', displayName: '', projectUrlStr: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git/'], pipelineTriggers([pollSCM('* * * * *')])])
-                }
-                
+                }  
             }
+        }
+	stage('Git project checkout') {
+           steps {
+                git branch: 'master', url: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git'  
+          }
         }
         stage('Build Application') {
             steps {
@@ -42,10 +46,8 @@ pipeline {
      
       stage('Run Docker container on Jenkins Agent') {
              
-            steps 
-			{
+            steps {
                 sh "docker run -d -p 9090:8080 bipin115/samplewebapp"
- 
             }
         }
         
@@ -53,7 +55,6 @@ pipeline {
              
             steps {
                 sh "docker -H ssh://jenkins@3.6.37.189 run -d -p 8003:8080 bipin115/samplewebapp"
- 
             }
         }
     }

@@ -11,7 +11,7 @@ pipeline {
         }
 	stage('Git project checkout') {
            steps {
-                git branch: 'master', url: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git'  
+                git branch: 'main', url: 'https://github.com/bipin115/PG_DevOps_SimpliLearn_Projects.git'  
           }
         }
         stage('Build Application') {

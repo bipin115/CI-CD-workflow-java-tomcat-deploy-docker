@@ -22,13 +22,38 @@ pipeline {
             }
         }
 
-        stage('Create Tomcat Docker Image'){
+        stage('Docker Build and Tag') {
+           steps {
+              
+                sh 'docker build -t samplewebapp:latest .' 
+                sh 'docker tag samplewebapp bipin115/samplewebapp:latest'       
+          }
+        }
+        
+        stage('Publish image to Docker Hub') {
+            
             steps {
-                sh "pwd"
-                sh "ls -a"
-                sh "docker build ./java-tomcat-sample-docker -t tomcatsamplewebapp:${env.BUILD_ID}"
+                    withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
+                    sh  'docker push bipin115/samplewebapp:lates'
+                    } 
             }
         }
-
+     
+      stage('Run Docker container on Jenkins Agent') {
+             
+            steps 
+			{
+                sh "docker run -d -p 9090:8080 bipin115/samplewebapp"
+ 
+            }
+        }
+        
+       stage('Run Docker container on remote hosts') {
+             
+            steps {
+                sh "docker -H ssh://jenkins@3.6.37.189 run -d -p 8003:8080 bipin115/samplewebapp"
+ 
+            }
+        }
     }
 }

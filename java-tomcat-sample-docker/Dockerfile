@@ -4,7 +4,7 @@ FROM tomcat:8.0
 MAINTAINER "Bipin Singh" 
 
 # COPY path-to-your-application-war path-to-webapps-in-docker-tomcat
-ADD ./target/java-tomcat-maven-example.war /usr/local/tomcat/webapps
+COPY target/java-tomcat-maven-example.war /usr/local/tomcat/webapps
 
 EXPOSE 8080
 

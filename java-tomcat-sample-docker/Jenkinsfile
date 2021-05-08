@@ -30,8 +30,8 @@ pipeline {
 		    catchError (buildResult:'SUCCESS', stageResult: 'FAILURE') {
 			sh "docker images"
 			sh "docker container ls"
-                        sh "docker container stop bipin115/samplewebapp"
-			sh "docker rm -f bipin115/samplewebapp"
+                        sh "docker container stop samplewebapp"
+			sh "docker rm -f samplewebapp"
 			sh "docker image rm -f bipin115/samplewebapp"
 		    }
             }
@@ -56,7 +56,7 @@ pipeline {
       stage('Run Docker container') {
              
             steps {
-                sh "docker run --name bipin115/samplewebapp -d -p 9090:8080 bipin115/samplewebapp"
+                sh "docker run --name samplewebapp -d -p 9090:8080 bipin115/samplewebapp"
             }
         }
     }

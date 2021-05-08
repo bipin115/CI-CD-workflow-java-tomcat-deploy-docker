@@ -30,14 +30,9 @@ pipeline {
 		    catchError (buildResult:'SUCCESS', stageResult: 'FAILURE') {
 			sh "docker images"
 			sh "docker container ls"
-			// Kill all running Containers
-			sh "docker kill ${docker ps -q}"
-			// Delete all stopped containers
-			sh "docker rm ${docker ps -a -q}"
-			// list only untagged (dangling) images
-			sh "docker images -f `dangling=true`"
-			// Remove only untagged (dangling) images
-			sh "docker rmi ${docker images -f "dangling=true" -q} --force" 
+                        sh "docker container stop bipin115/samplewebapp"
+			sh "docker rm -f bipin115/samplewebapp"
+			sh "docker image rm -f bipin115/samplewebapp"
 		    }
             }
         }
@@ -61,7 +56,7 @@ pipeline {
       stage('Run Docker container') {
              
             steps {
-                sh "docker run -d -p 9090:8080 bipin115/samplewebapp"
+                sh "docker run --name bipin115/samplewebapp -d -p 9090:8080 bipin115/samplewebapp"
             }
         }
     }

@@ -38,7 +38,7 @@ pipeline {
         }
         stage('Docker Build and Tag') {
            steps {
-              
+                sh 'cd java-tomcat-sample-docker/'
                 sh 'docker build -t samplewebapp:latest .'  
                 sh 'docker tag samplewebapp bipin115/samplewebapp:latest'       
           }

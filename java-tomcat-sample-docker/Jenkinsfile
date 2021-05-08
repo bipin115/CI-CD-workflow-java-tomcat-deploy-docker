@@ -27,11 +27,18 @@ pipeline {
         }
 	stage('Clean Existing Images and Stop and remove Running container') {            
             steps {
-				sh "docker images"
-				sh "docker container ls"
-                		sh "docker container stop bipin115/samplewebapp:latest"
-				sh "docker rm -f bipin115/samplewebapp:latest"
-				sh "docker image rm -f bipin115/samplewebapp:latest"
+		try 
+		{
+			sh "docker images"
+			sh "docker container ls"
+			sh "docker stop bipin115/samplewebapp"
+			sh "docker rm -f bipin115/samplewebapp"
+			sh "docker image rm -f bipin115/samplewebapp"
+		} 
+		catch (err) {
+			echo "Caught: ${err}"
+			currentBuild.result = 'SUCCESS'
+		}
             }
         }
         stage('Docker Build and Tag') {

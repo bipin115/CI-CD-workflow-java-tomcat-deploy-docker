@@ -31,13 +31,13 @@ pipeline {
 			sh "docker images"
 			sh "docker container ls"
 			// Kill all running Containers
-			sh "docker kill `$`(docker ps -q)"
+			sh "docker kill ${(docker ps -q)}"
 			// Delete all stopped containers
-			sh "docker rm `$`(docker ps -a -q)"
+			sh "docker rm ${(docker ps -a -q)}"
 			// list only untagged (dangling) images
 			sh "docker images -f "dangling=true""
 			// Remove only untagged (dangling) images
-			sh "docker rmi `$`(docker images -f "dangling=true" -q) --force" 
+			sh "docker rmi ${(docker images -f "dangling=true" -q)} --force" 
 		    }
             }
         }

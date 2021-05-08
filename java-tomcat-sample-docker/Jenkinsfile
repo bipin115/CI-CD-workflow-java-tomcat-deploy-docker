@@ -25,7 +25,15 @@ pipeline {
                 }
             }
         }
-
+	stage('Clean Existing Images and Stop and remove Running container') {            
+            steps {
+				sh "docker images"
+				sh "docker container ls"
+                		sh "docker container stop bipin115/samplewebapp:latest"
+				sh "docker rm -f bipin115/samplewebapp:latest"
+				sh "docker image rm -f bipin115/samplewebapp:latest"
+            }
+        }
         stage('Docker Build and Tag') {
            steps {
               

@@ -35,7 +35,7 @@ pipeline {
 			// Delete all stopped containers
 			sh "docker rm ${docker ps -a -q}"
 			// list only untagged (dangling) images
-			sh "docker images -f "dangling=true""
+			sh "docker images -f `dangling=true`"
 			// Remove only untagged (dangling) images
 			sh "docker rmi ${docker images -f "dangling=true" -q} --force" 
 		    }
